@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Dead Rails Магазин</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -17,6 +19,9 @@
       color: #e5e7eb;
       transition: background 0.3s ease, color 0.3s ease;
       -webkit-tap-highlight-color: transparent;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overscroll-behavior-y: none;
     }
 
     body.light-theme {
@@ -85,6 +90,7 @@
       position: relative;
       overflow: hidden;
       min-width: 120px;
+      min-height: 44px;
       touch-action: manipulation;
     }
 
@@ -130,6 +136,8 @@
       color: white;
       font-size: 1rem;
       transition: all 0.2s ease;
+      -webkit-appearance: none;
+      touch-action: manipulation;
     }
 
     body.light-theme input[type="text"] {
@@ -141,6 +149,7 @@
       border-color: #60a5fa;
       box-shadow: 0 0 8px rgba(96, 165, 250, 0.4);
       background: #111827;
+      outline: none;
     }
 
     body.light-theme input[type="text"]:focus {
@@ -157,6 +166,8 @@
       position: relative;
       transition: all 0.2s ease;
       margin-right: 0.5rem;
+      min-height: 44px;
+      touch-action: manipulation;
     }
 
     input[type="checkbox"]:checked {
@@ -253,6 +264,8 @@
       transition: all 0.2s ease;
       width: 100%;
       text-align: center;
+      min-height: 44px;
+      touch-action: manipulation;
     }
 
     #cart > div > div > button:hover {
@@ -266,7 +279,35 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    #purchaseNotification, #addNotification {
+    #purchaseNotification {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      color: white;
+      font-size: 1.5rem;
+      padding: 2rem;
+      text-align: center;
+      animation: fadeIn 0.3s ease;
+      display: none;
+    }
+
+    #purchaseNotification.show {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    #addNotification {
       background: linear-gradient(145deg, #1f2937, #111827);
       border-radius: 1rem;
       box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
@@ -275,6 +316,10 @@
       animation: popUp 0.3s ease;
       z-index: 1000;
       font-size: 0.9rem;
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      display: none;
     }
 
     body.light-theme #purchaseNotification,
@@ -301,6 +346,7 @@
       font-size: 1.2rem;
       width: 2.5rem;
       height: 2.5rem;
+      touch-action: manipulation;
     }
 
     #scrollTop.visible {
@@ -323,6 +369,8 @@
       margin: 0.25rem;
       font-size: 0.875rem;
       transition: all 0.2s ease;
+      min-height: 44px;
+      touch-action: manipulation;
     }
 
     .category-button:hover {
@@ -337,12 +385,14 @@
       .p-6 { padding: 0.5rem; }
       .text-xl { font-size: 1rem; }
       .text-2xl { font-size: 1.25rem; }
+      .text-3xl { font-size: 1.75rem; }
       .item { padding: 0.5rem; gap: 0.5rem; }
-      #purchaseNotification, #addNotification { max-width: 85vw; padding: 0.75rem; }
+      #purchaseNotification { font-size: 1.2rem; padding: 1rem; }
+      #addNotification { max-width: 85vw; padding: 0.75rem; }
       #cart > div { padding: 0.5rem; }
-      #cart > div > div > button { padding: 0.25rem; font-size: 0.7rem; }
-      #scrollTop { bottom: 0.5rem; right: 0.5rem; width: 2rem; height: 2rem; font-size: 1rem; }
-      button.bg-white { padding: 0.5rem 1rem; min-width: 100px; }
+      #cart > div > div > button { padding: 0.25rem; font-size: 0.7rem; min-height: 36px; }
+      #scrollTop { bottom: 1rem; right: 1rem; width: 2rem; height: 2rem; font-size: 1rem; }
+      button.bg-white { padding: 0.5rem 1rem; min-width: 100px; min-height: 36px; }
       input[type="text"] { padding: 0.5rem; font-size: 0.9rem; }
       .flex { flex-direction: column; }
       .justify-between { justify-content: center; }
@@ -350,13 +400,27 @@
       .mt-8 { margin-top: 0.5rem; }
       #items > div > div { flex-direction: column; align-items: center; text-align: center; }
       #cart > div > div { align-items: center; }
+      .category-button { padding: 0.5rem; font-size: 0.75rem; min-height: 36px; }
+      #username-display { font-size: 1rem; }
     }
 
     @media (max-width: 320px) {
       #login, #shop { min-width: 100%; max-width: 100%; padding: 0.25rem; }
       .text-3xl { font-size: 1.5rem; }
+      .text-2xl { font-size: 1.1rem; }
       .item { margin-bottom: 0.5rem; }
       #cart > div > div > span { font-size: 0.75rem; }
+      button.bg-white { padding: 0.4rem 0.8rem; min-width: 80px; min-height: 32px; }
+      .category-button { padding: 0.4rem 0.6rem; font-size: 0.7rem; min-height: 32px; }
+      #username-display { font-size: 0.9rem; }
+      #purchaseNotification { font-size: 1rem; padding: 0.5rem; }
+    }
+
+    @media (min-width: 641px) {
+      .p-6 { padding: 1rem; }
+      .text-3xl { font-size: 2rem; }
+      .text-2xl { font-size: 1.5rem; }
+      #username-display { font-size: 1.25rem; }
     }
   </style>
 </head>
@@ -379,7 +443,7 @@
 
   <div class="w-full max-w-4xl bg-gray-900 rounded-lg p-6 hidden" id="shop">
     <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
-      <button onclick="returnToLogin()" class="w-full sm:w-auto bg-gray-700 text-white px-3 py-2 rounded-md hover:bg-gray-600 transition-colors mb-2 sm:mb-0">Вернуться</button>
+      <div id="username-display" class="text-white font-bold mb-2 sm:mb-0 hidden">Ник: <span id="current-username"></span> <button onclick="returnToLogin()" class="text-blue-400 underline hover:text-blue-300 text-sm">Изменить</button></div>
       <button onclick="toggleTheme()" class="w-full sm:w-auto bg-gray-700 text-white px-3 py-2 rounded-md hover:bg-gray-600 transition-colors">Тема</button>
     </div>
 
@@ -570,14 +634,12 @@
     </div>
   </div>
 
-  <div id="purchaseNotification" class="fixed bottom-2 right-2 bg-gray-900 text-white p-2 rounded-md shadow-lg hidden max-w-80">
-    <div class="flex items-center gap-2">
-      <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-      </svg>
-      <p>Покупка успешна! Пиши в <a href="https://t.me/Aibekxcdm815" target="_blank" class="underline text-blue-400">@Aibekxcdm815</a>.</p>
+  <div id="purchaseNotification" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 flex items-center justify-center z-2000 text-white text-center p-4 hidden">
+    <div class="bg-gray-900 p-6 rounded-lg shadow-lg max-w-md">
+      <h2 class="text-2xl font-bold mb-4">ВАЖНО! СПАСИБО ЗА ПОКУПКУ!</h2>
+      <p class="mb-4">Для получения товара зайдите в мой Telegram для выдачи: <a href="https://t.me/Aibekxcdm815" target="_blank" class="underline text-blue-400">@Aibekxcdm815</a>.</p>
+      <p class="text-yellow-400">Не забудьте написать после покупки!</p>
     </div>
-    <button onclick="closeNotification()" class="mt-2 text-gray-400 hover:text-gray-300 text-xs">X</button>
   </div>
 
   <div id="addNotification" class="fixed bottom-2 left-2 bg-gray-900 text-white p-2 rounded-md shadow-lg hidden max-w-80">
@@ -614,10 +676,11 @@
         el.style.animationDelay = `${i * 0.05}s`;
       });
 
-      // Проверяем, есть ли сохранённый ник
       if (username) {
         document.getElementById("login").classList.add("hidden");
         document.getElementById("shop").classList.remove("hidden");
+        document.getElementById("current-username").textContent = username;
+        document.getElementById("username-display").classList.remove("hidden");
       }
 
       document.getElementById("agreement").addEventListener("change", function() {
@@ -647,9 +710,11 @@
         return;
       }
       username = input;
-      localStorage.setItem("username", username); // Сохраняем ник
+      localStorage.setItem("username", username);
       document.getElementById("login").classList.add("hidden");
       document.getElementById("shop").classList.remove("hidden");
+      document.getElementById("current-username").textContent = username;
+      document.getElementById("username-display").classList.remove("hidden");
       document.querySelectorAll('.item').forEach((el, i) => {
         el.style.animationDelay = `${i * 0.05}s`;
       });
@@ -661,8 +726,9 @@
       document.getElementById("robloxName").value = "";
       document.getElementById("agreement").checked = false;
       document.getElementById("enterButton").disabled = true;
+      document.getElementById("username-display").classList.add("hidden");
       username = "";
-      localStorage.removeItem("username"); // Удаляем ник
+      localStorage.removeItem("username");
       cart = [];
       localStorage.removeItem("cart");
       updateCart();
@@ -729,14 +795,14 @@
 
     function showNotification() {
       const notification = document.getElementById("purchaseNotification");
-      notification.classList.remove("hidden");
+      notification.classList.add("show");
       setTimeout(() => {
-        notification.classList.add("hidden");
-      }, 3000);
+        notification.classList.remove("show");
+      }, 5000); // 5 секунд
     }
 
     function closeNotification() {
-      document.getElementById("purchaseNotification").classList.add("hidden");
+      document.getElementById("purchaseNotification").classList.remove("show");
     }
 
     function buyAll() {
@@ -744,7 +810,7 @@
       const purchaseDetails = cart.map(cartItem => `Товар: ${cartItem.item}, Цена: ${cartItem.price} тг`).join("\n");
       const purchase = {
         date: new Date().toLocaleString(),
-        items: [...cart], // Копируем корзину
+        items: [...cart],
         total: cart.reduce((sum, item) => sum + item.price, 0)
       };
       purchaseHistory.push(purchase);

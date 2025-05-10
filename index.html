@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dead Rails Магазин</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #0a0a0a, #1a202c);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      color: #e5e7eb;
+      transition: background 0.3s ease, color 0.3s ease;
+      -webkit-tap-highlight-color: transparent; /* Убираем подсветку при тапе */
+    }
+
+    /* Светлый режим */
+    body.light-theme {
+      background: linear-gradient(180deg, #e5e7eb, #f3f4f6);
+      color: #1f2937;
+    }
+
+    body.light-theme .bg-gray-900 {
+      background: linear-gradient(145deg, #ffffff, #e5e7eb);
+    }
+
+    body.light-theme .text-gray-300 {
+      color: #1f2937;
+    }
+
+    body.light-theme .text-white {
+      color: #111827;
+    }
+
+    body.light-theme #cart > div,
+    body.light-theme .item {
+      background: linear-gradient(145deg, #ffffff, #e5e7eb);
+    }
+
+    /* Анимированный фон с частицами (упрощён для слабых устройств) */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+      z-index: -1;
+      animation: pulse 10s infinite alternate;
+    }
+
+    body.light-theme::before {
+      background: radial-gradient(circle, rgba(0, 0, 0, 0.03) 0%, transparent 70%);
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.2; }
+      100% { opacity: 0.3; }
+    }
+
+    /* Контейнеры */
+    .bg-gray-900 {
+      background: linear-gradient(145deg, #1f2937, #111827);
+      border-radius: 1.5rem;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s ease, background 0.2s ease;
+      padding: 1rem;
+    }
+
+    .bg-gray-900:hover {
+      transform: translateY(-3px);
+    }
+
+    /* Кнопки */
+    button.bg-white {
+      background: linear-gradient(to right, #60a5fa, #3b82f6);
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      min-width: 120px;
+      touch-action: manipulation; /* Улучшение тач-управления */
+    }
+
+    button.bg-white:hover:not(:disabled) {
+      background: linear-gradient(to right, #3b82f6, #2563eb);
+      transform: scale(1.03);
+      box-shadow: 0 3px 10px rgba(59, 130, 246, 0.3);
+    }
+
+    button.bg-white::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s ease, height 0.3s ease;
+    }
+
+    button.bg-white:active::after {
+      width: 150px;
+      height: 150px;
+    }
+
+    /* Зеленая кнопка при добавлении */
+    button.added {
+      background: linear-gradient(to right, #10b981, #059669);
+    }
+
+    button.added:hover:not(:disabled) {
+      background: linear-gradient(to right, #059669, #047857);
+      transform: scale(1.03);
+      box-shadow: 0 3px 10px rgba(5, 150, 105, 0.3);
+    }
+
+    /* Поля ввода */
+    input[type="text"] {
+      background: #1f2937;
+      border: 2px solid transparent;
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      color: white;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    body.light-theme input[type="text"] {
+      background: #e5e7eb;
+      color: #1f2937;
+    }
+
+    input[type="text"]:focus {
+      border-color: #60a5fa;
+      box-shadow: 0 0 8px rgba(96, 165, 250, 0.4);
+      background: #111827;
+    }
+
+    body.light-theme input[type="text"]:focus {
+      background: #ffffff;
+    }
+
+    /* Чекбокс */
+    input[type="checkbox"] {
+      appearance: none;
+      width: 1.5rem;
+      height: 1.5rem;
+      border: 2px solid #60a5fa;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+      margin-right: 0.5rem;
+    }
+
+    input[type="checkbox"]:checked {
+      background: #60a5fa;
+    }
+
+    input[type="checkbox"]:checked::after {
+      content: '✔';
+      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1rem;
+    }
+
+    /* Карточки товаров */
+    .item {
+      background: linear-gradient(145deg, #1f2937, #111827);
+      border-radius: 1rem;
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+      animation: slideIn 0.3s ease;
+    }
+
+    .item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 12px rgba(96, 165, 250, 0.15);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Корзина */
+    #cart {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    #cart > div {
+      background: linear-gradient(145deg, #1f2937, #111827);
+      border: 2px solid transparent;
+      border-radius: 0.75rem;
+      padding: 0.75rem;
+      width: 100%;
+      animation: cartAdd 0.3s ease;
+      transition: all 0.2s ease;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    #cart > div:nth-child(3n+1) {
+      animation: rowFadeIn 0.3s ease;
+    }
+
+    @keyframes rowFadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #cart > div:hover {
+      border-color: #60a5fa;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 12px rgba(96, 165, 250, 0.2);
+    }
+
+    #cart > div > div {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    #cart > div > div > span {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    /* Кнопка удаления */
+    #cart > div > div > button {
+      background: linear-gradient(to right, #ef4444, #b91c1c);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      width: 100%;
+      text-align: center;
+    }
+
+    #cart > div > div > button:hover {
+      background: linear-gradient(to right, #b91c1c, #991b1b);
+      transform: scale(1.03);
+      box-shadow: 0 3px 8px rgba(239, 68, 68, 0.3);
+    }
+
+    @keyframes cartAdd {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Уведомление о покупке и добавлении */
+    #purchaseNotification, #addNotification {
+      background: linear-gradient(145deg, #1f2937, #111827);
+      border-radius: 1rem;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+      padding: 1rem;
+      max-width: 90vw;
+      animation: popUp 0.3s ease;
+      z-index: 1000;
+      font-size: 0.9rem;
+    }
+
+    body.light-theme #purchaseNotification,
+    body.light-theme #addNotification {
+      background: linear-gradient(145deg, #ffffff, #e5e7eb);
+    }
+
+    @keyframes popUp {
+      from { opacity: 0; transform: scale(0.9) translateY(30px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Кнопка "Наверх" */
+    #scrollTop {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background: linear-gradient(to right, #60a5fa, #3b82f6);
+      color: white;
+      padding: 0.5rem;
+      border-radius: 50%;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+      display: none;
+      transition: all 0.2s ease;
+      font-size: 1.2rem;
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    #scrollTop.visible {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #scrollTop:hover {
+      background: linear-gradient(to right, #3b82f6, #2563eb);
+      transform: scale(1.1);
+    }
+
+    /* Кнопки фильтрации */
+    .category-button {
+      background: #374151;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      margin: 0.25rem;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+
+    .category-button:hover {
+      background: #4b5563;
+    }
+
+    .category-button.active {
+      background: linear-gradient(to right, #60a5fa, #3b82f6);
+    }
+
+    /* Адаптивность */
+    @media (max-width: 640px) {
+      .p-6 { padding: 0.5rem; }
+      .text-xl { font-size: 1rem; }
+      .text-2xl { font-size: 1.25rem; }
+      .item { padding: 0.5rem; gap: 0.5rem; }
+      #purchaseNotification, #addNotification { max-width: 85vw; padding: 0.75rem; }
+      #cart > div { padding: 0.5rem; }
+      #cart > div > div > button { padding: 0.25rem; font-size: 0.7rem; }
+      #scrollTop { bottom: 0.5rem; right: 0.5rem; width: 2rem; height: 2rem; font-size: 1rem; }
+      button.bg-white { padding: 0.5rem 1rem; min-width: 100px; }
+      input[type="text"] { padding: 0.5rem; font-size: 0.9rem; }
+      .flex { flex-direction: column; }
+      .justify-between { justify-content: center; }
+      .mb-6 { margin-bottom: 0.5rem; }
+      .mt-8 { margin-top: 0.5rem; }
+      #items > div > div { flex-direction: column; align-items: center; text-align: center; }
+      #cart > div > div { align-items: center; }
+    }
+
+    @media (max-width: 320px) {
+      #login, #shop { min-width: 100%; max-width: 100%; padding: 0.25rem; }
+      .text-3xl { font-size: 1.5rem; }
+      .item { margin-bottom: 0.5rem; }
+      #cart > div > div > span { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-md bg-gray-900 rounded-lg p-6" id="login">
+    <h1 class="text-3xl font-bold text-white text-center mb-4 flex items-center justify-center gap-2">
+      <span>Dead Rails</span>
+      <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+      </svg>
+    </h1>
+    <p class="text-red-400 text-center mb-3">Проверьте ник, ошибки на вас!</p>
+    <input type="text" id="robloxName" placeholder="Roblox ник" class="w-full p-3 rounded-md mb-3 text-white focus:outline-none">
+    <div class="flex items-center mb-3">
+      <input type="checkbox" id="agreement" class="mr-2">
+      <label for="agreement" class="text-gray-300 text-sm">Согласен с условиями</label>
+    </div>
+    <button id="enterButton" onclick="enterStore()" class="w-full bg-white text-white p-3 rounded-md transition-colors disabled:opacity-50" disabled>Войти</button>
+  </div>
+
+  <div class="w-full max-w-4xl bg-gray-900 rounded-lg p-6 hidden" id="shop">
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
+      <button onclick="returnToLogin()" class="w-full sm:w-auto bg-gray-700 text-white px-3 py-2 rounded-md hover:bg-gray-600 transition-colors mb-2 sm:mb-0">Вернуться</button>
+      <button onclick="toggleTheme()" class="w-full sm:w-auto bg-gray-700 text-white px-3 py-2 rounded-md hover:bg-gray-600 transition-colors">Тема</button>
+    </div>
+
+    <div id="items" class="tab-content">
+      <div class="mb-4">
+        <input type="text" id="search" placeholder="Поиск..." class="w-full p-3 rounded-md mb-3 text-white focus:outline-none">
+        <div class="flex flex-wrap justify-center gap-1">
+          <button class="category-button active" data-category="all" onclick="filterCategory('all')">Все</button>
+          <button class="category-button" data-category="classes" onclick="filterCategory('classes')">Классы</button>
+          <button class="category-button" data-category="trains" onclick="filterCategory('trains')">Поезда</button>
+          <button class="category-button" onclick="sortItems('asc')">Цена ↑</button>
+          <button class="category-button" onclick="sortItems('desc')">Цена ↓</button>
+        </div>
+      </div>
+
+      <div id="classes">
+        <h2 class="text-2xl font-bold text-white text-center mb-4">Классы</h2>
+        <div class="space-y-2">
+          <div class="item" data-category="classes" data-price="25">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🩺</span>
+              <span class="text-gray-300">Доктор — 25 тг</span>
+            </div>
+            <button onclick="addToCart('Доктор', 25, this, '🩺')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="classes" data-price="25">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">⛏️</span>
+              <span class="text-gray-300">Майнер — 25 тг</span>
+            </div>
+            <button onclick="addToCart('Майнер', 25, this, '⛏️')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="classes" data-price="25">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🎸</span>
+              <span class="text-gray-300">Музыкант — 25 тг</span>
+            </div>
+            <button onclick="addToCart('Музыкант', 25, this, '🎸')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="classes" data-price="30">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🔥</span>
+              <span class="text-gray-300">Арсонист — 30 тг</span>
+            </div>
+            <button onclick="addToCart('Арсонист', 30, this, '🔥')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="classes" data-price="50">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">📦</span>
+              <span class="text-gray-300">Мастер упак. — 50 тг</span>
+            </div>
+            <button onclick="addToCart('Мастер упаковки', 50, this, '📦')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="classes" data-price="50">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">💀</span>
+              <span class="text-gray-300">Некромант — 50 тг</span>
+            </div>
+            <button onclick="addToCart('Некромант', 50, this, '💀')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="classes" data-price="75">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🤠</span>
+              <span class="text-gray-300">Аламо — 75 тг</span>
+            </div>
+            <button onclick="addToCart('Аламо', 75, this, '🤠')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="classes" data-price="75">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🐎</span>
+              <span class="text-gray-300">Ковбой — 75 тг</span>
+            </div>
+            <button onclick="addToCart('Ковбой', 75, this, '🐎')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="classes" data-price="75">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🎫</span>
+              <span class="text-gray-300">Кондуктор — 75 тг</span>
+            </div>
+            <button onclick="addToCart('Кондуктор', 75, this, '🎫')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="classes" data-price="75">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🎰</span>
+              <span class="text-gray-300">Высокий ролик — 75 тг</span>
+            </div>
+            <button onclick="addToCart('Высокий ролик', 75, this, '🎰')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="classes" data-price="75">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🐺</span>
+              <span class="text-gray-300">Вереволк — 75 тг</span>
+            </div>
+            <button onclick="addToCart('Вереволк', 75, this, '🐺')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="classes" data-price="100">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🛡️</span>
+              <span class="text-gray-300">Выживший — 100 тг</span>
+            </div>
+            <button onclick="addToCart('Выживший', 100, this, '🛡️')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="classes" data-price="100">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">✝️</span>
+              <span class="text-gray-300">Священник — 100 тг</span>
+            </div>
+            <button onclick="addToCart('Священник', 100, this, '✝️')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="classes" data-price="100">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🧛</span>
+              <span class="text-gray-300">Вампир — 100 тг</span>
+            </div>
+            <button onclick="addToCart('Вампир', 100, this, '🧛')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="classes" data-price="100">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🧟</span>
+              <span class="text-gray-300">Зомби — 100 тг</span>
+            </div>
+            <button onclick="addToCart('Зомби', 100, this, '🧟')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="classes" data-price="150">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🤖</span>
+              <span class="text-gray-300">Железный чел. — 150 тг</span>
+            </div>
+            <button onclick="addToCart('Железный человек', 150, this, '🤖')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="trains">
+        <h2 class="text-2xl font-bold text-white text-center mt-4 mb-4">Поезда</h2>
+        <div class="space-y-2">
+          <div class="item" data-category="trains" data-price="225">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🐄</span>
+              <span class="text-gray-300">Круп. рог. скот — 225 тг</span>
+            </div>
+            <button onclick="addToCart('Крупный рогатый скот', 225, this, '🐄')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="trains" data-price="250">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🏆</span>
+              <span class="text-gray-300">Золотая лих. — 250 тг</span>
+            </div>
+            <button onclick="addToCart('Золотая лихорадка', 250, this, '🏆')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+          <div class="item" data-category="trains" data-price="275">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">🛡️</span>
+              <span class="text-gray-300">Бронированный — 275 тг</span>
+            </div>
+            <button onclick="addToCart('Бронированный', 275, this, '🛡️')" class="bg-white text-white px-2 py-1 rounded-md transition-colors">В корзину</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <h2 class="text-2xl font-bold text-white text-center mb-3">Корзина (<span id="cartCount">0</span>)</h2>
+        <div id="cart" class="space-y-2"></div>
+        <div class="flex flex-col sm:flex-row justify-between items-center mt-3">
+          <span class="text-gray-300 mb-2 sm:mb-0">Итого: <span id="total">0 тг</span></span>
+          <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto">
+            <button onclick="clearCart()" class="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700 transition-colors disabled:opacity-50" id="clearCartButton" disabled>Очистить</button>
+            <button onclick="buyAll()" class="bg-white text-white px-3 py-1 rounded-md transition-colors disabled:opacity-50" disabled id="buyAllButton">Купить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4 text-center text-gray-400 text-sm">
+      <p>Соцсети: <a href="https://www.tiktok.com/@dead_rails_sale" target="_blank" class="underline hover:text-blue-400">@dead_rails_sale</a> | <a href="https://t.me/Aibekxcdm815" target="_blank" class="underline hover:text-blue-400">@Aibekxcdm815</a></p>
+      <div class="mt-2 text-gray-500 text-xs">
+        <p class="mb-2"><strong>Авторские права</strong>: Фанатский проект, не связан с Dead Rails или Roblox.</p>
+        <p class="mb-2"><strong>Сайт</strong>: © 2025 Aibek, Arsen, Danik. Все права защищены.</p>
+        <p class="mb-2"><strong>Правила</strong>: Товары от indie-разработчиков, не Roblox. Связь в Telegram.</p>
+        <p class="mb-2"><strong>Разработчикам</strong>: Пожалуйста, предупредите через Telegram перед жалобами.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="purchaseNotification" class="fixed bottom-2 right-2 bg-gray-900 text-white p-2 rounded-md shadow-lg hidden max-w-80">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+      <p>Покупка успешна! Пиши в <a href="https://t.me/Aibekxcdm815" target="_blank" class="underline text-blue-400">@Aibekxcdm815</a>.</p>
+    </div>
+    <button onclick="closeNotification()" class="mt-2 text-gray-400 hover:text-gray-300 text-xs">X</button>
+  </div>
+
+  <div id="addNotification" class="fixed bottom-2 left-2 bg-gray-900 text-white p-2 rounded-md shadow-lg hidden max-w-80">
+    <div class="flex items-center gap-2">
+      <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+      <p>Товар в корзине!</p>
+    </div>
+  </div>
+
+  <button id="scrollTop" class="fixed bottom-1 right-1 p-1 rounded-full shadow-lg hidden hover:bg-blue-700 transition-all">
+    ↑
+  </button>
+
+  <script>
+    let username = "";
+    let cart = [];
+
+    // Загрузка корзины из localStorage
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedCart = localStorage.getItem("cart");
+      if (savedCart) {
+        cart = JSON.parse(savedCart);
+        updateCart();
+      }
+
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "light") {
+        document.body.classList.add("light-theme");
+      }
+    });
+
+    document.getElementById("agreement").addEventListener("change", function() {
+      document.getElementById("enterButton").disabled = !this.checked;
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle("light-theme");
+      const theme = document.body.classList.contains("light-theme") ? "light" : "dark";
+      localStorage.setItem("theme", theme);
+    }
+
+    window.addEventListener("scroll", () => {
+      const scrollTopBtn = document.getElementById("scrollTop");
+      scrollTopBtn.classList.toggle("visible", window.scrollY > 200);
+    });
+
+    document.getElementById("scrollTop").addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    function enterStore() {
+      const input = document.getElementById("robloxName").value.trim();
+      if (input === "") {
+        alert("Введите ник!");
+        return;
+      }
+      username = input;
+      document.getElementById("login").classList.add("hidden");
+      document.getElementById("shop").classList.remove("hidden");
+      document.querySelectorAll('.item').forEach((el, i) => {
+        el.style.animationDelay = `${i * 0.05}s`;
+      });
+    }
+
+    function returnToLogin() {
+      document.getElementById("shop").classList.add("hidden");
+      document.getElementById("login").classList.remove("hidden");
+      document.getElementById("robloxName").value = "";
+      document.getElementById("agreement").checked = false;
+      document.getElementById("enterButton").disabled = true;
+      username = "";
+      cart = [];
+      localStorage.removeItem("cart");
+      updateCart();
+    }
+
+    function addToCart(item, price, button, icon) {
+      const exists = cart.find(cartItem => cartItem.item === item);
+      if (!exists) {
+        cart.push({ item, price, icon });
+        updateCart();
+        const addNotification = document.getElementById("addNotification");
+        addNotification.classList.remove("hidden");
+        setTimeout(() => addNotification.classList.add("hidden"), 1500);
+      }
+
+      button.classList.add("added");
+      button.textContent = "Добавлено";
+      button.disabled = true;
+
+      setTimeout(() => {
+        button.classList.remove("added");
+        button.textContent = "В корзину";
+        button.disabled = false;
+      }, 2000);
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCart();
+    }
+
+    function clearCart() {
+      cart = [];
+      updateCart();
+    }
+
+    function updateCart() {
+      const cartDiv = document.getElementById("cart");
+      const totalSpan = document.getElementById("total");
+      const cartCount = document.getElementById("cartCount");
+      const buyAllButton = document.getElementById("buyAllButton");
+      const clearCartButton = document.getElementById("clearCartButton");
+      cartDiv.innerHTML = "";
+      let total = 0;
+
+      cart.forEach((cartItem, index) => {
+        total += cartItem.price;
+        const itemDiv = document.createElement("div");
+        itemDiv.innerHTML = `
+          <div>
+            <span><span class="text-xl">${cartItem.icon}</span> ${cartItem.item} — ${cartItem.price} тг</span>
+            <button onclick="removeFromCart(${index})">Удалить</button>
+          </div>
+        `;
+        cartDiv.appendChild(itemDiv);
+      });
+
+      totalSpan.textContent = `${total} тг`;
+      cartCount.textContent = cart.length;
+      buyAllButton.disabled = cart.length === 0;
+      clearCartButton.disabled = cart.length === 0;
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+
+    function showNotification() {
+      const notification = document.getElementById("purchaseNotification");
+      notification.classList.remove("hidden");
+      setTimeout(() => {
+        notification.classList.add("hidden");
+      }, 3000);
+    }
+
+    function closeNotification() {
+      document.getElementById("purchaseNotification").classList.add("hidden");
+    }
+
+    function buyAll() {
+      if (!username || cart.length === 0) return;
+      const purchaseDetails = cart.map(cartItem => `Товар: ${cartItem.item}, Цена: ${cartItem.price} тг`).join("\n");
+      fetch("https://discord.com/api/webhooks/1370484054008266863/C3LVADVDozvUsnHF39Id3b6vsyTuZIzE9Cn0Up86f20V5vwsxr6RLvN4wVXQ-0Tuc7U2", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content: `**Покупка в магазине Dead Rails**\nПользователь: ${username}\n${purchaseDetails}\nИтого: ${cart.reduce((sum, item) => sum + item.price, 0)} тг`
+        })
+      });
+      showNotification();
+      cart = [];
+      updateCart();
+    }
+
+    function filterCategory(category) {
+      document.querySelectorAll(".category-button").forEach(btn => btn.classList.remove("active"));
+      document.querySelector(`[data-category="${category}"]`).classList.add("active");
+
+      const searchQuery = document.getElementById("search").value.toLowerCase();
+      document.querySelectorAll(".item").forEach(item => {
+        const itemCategory = item.getAttribute("data-category");
+        const nameElement = item.querySelector("span:nth-child(2)");
+        if (!nameElement) return;
+        const itemName = nameElement.textContent.toLowerCase();
+        const matchesCategory = category === "all" || itemCategory === category;
+        const matchesSearch = itemName.includes(searchQuery);
+        item.style.display = matchesCategory && matchesSearch ? "flex" : "none";
+      });
+
+      document.getElementById("classes").style.display = (category === "all" || category === "classes") ? "block" : "none";
+      document.getElementById("trains").style.display = (category === "all" || category === "trains") ? "block" : "none";
+    }
+
+    function sortItems(order) {
+      const classesContainer = document.getElementById("classes").querySelector(".space-y-2");
+      const trainsContainer = document.getElementById("trains").querySelector(".space-y-2");
+      const allItems = Array.from(document.querySelectorAll(".item"));
+
+      allItems.sort((a, b) => {
+        const priceA = parseInt(a.getAttribute("data-price"));
+        const priceB = parseInt(b.getAttribute("data-price"));
+        return order === "asc" ? priceA - priceB : priceB - priceA;
+      });
+
+      classesContainer.innerHTML = "";
+      trainsContainer.innerHTML = "";
+      allItems.forEach(item => {
+        const category = item.getAttribute("data-category");
+        if (category === "classes") {
+          classesContainer.appendChild(item);
+        } else {
+          trainsContainer.appendChild(item);
+        }
+      });
+
+      filterCategory(document.querySelector(".category-button.active").getAttribute("data-category"));
+    }
+
+    document.getElementById("search").addEventListener("input", function() {
+      const activeCategory = document.querySelector(".category-button.active").getAttribute("data-category");
+      filterCategory(activeCategory);
+    });
+  </script>
+</body>
+</html>

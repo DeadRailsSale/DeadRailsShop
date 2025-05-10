@@ -37,8 +37,7 @@
     }
 
     body.light-theme #cart > div,
-    body.light-theme .item,
-    body.light-theme .review-card {
+    body.light-theme .item {
       background: linear-gradient(145deg, #ffffff, #e5e7eb);
     }
 
@@ -123,7 +122,7 @@
       box-shadow: 0 3px 10px rgba(5, 150, 105, 0.3);
     }
 
-    input[type="text"], input[type="password"] {
+    input[type="text"] {
       background: #1f2937;
       border: 2px solid transparent;
       border-radius: 0.5rem;
@@ -133,21 +132,18 @@
       transition: all 0.2s ease;
     }
 
-    body.light-theme input[type="text"],
-    body.light-theme input[type="password"] {
+    body.light-theme input[type="text"] {
       background: #e5e7eb;
       color: #1f2937;
     }
 
-    input[type="text"]:focus,
-    input[type="password"]:focus {
+    input[type="text"]:focus {
       border-color: #60a5fa;
       box-shadow: 0 0 8px rgba(96, 165, 250, 0.4);
       background: #111827;
     }
 
-    body.light-theme input[type="text"]:focus,
-    body.light-theme input[type="password"]:focus {
+    body.light-theme input[type="text"]:focus {
       background: #ffffff;
     }
 
@@ -337,121 +333,6 @@
       background: linear-gradient(to right, #60a5fa, #3b82f6);
     }
 
-    .review-card {
-      background: linear-gradient(145deg, #1f2937, #111827);
-      border-radius: 1rem;
-      padding: 0.75rem;
-      margin-bottom: 0.75rem;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-      animation: reviewSlideIn 0.5s ease;
-      border-left: 4px solid #60a5fa;
-    }
-
-    @keyframes reviewSlideIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .review-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 12px rgba(96, 165, 250, 0.15);
-    }
-
-    .review-card .review-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5rem;
-    }
-
-    .review-card .review-header .review-author {
-      font-weight: 600;
-      color: #60a5fa;
-      font-size: 0.9rem;
-    }
-
-    .review-card .review-header .review-date {
-      font-size: 0.75rem;
-      color: #9ca3af;
-    }
-
-    .review-card .review-text {
-      font-size: 0.875rem;
-      color: #e5e7eb;
-      line-height: 1.4;
-    }
-
-    .review-card .delete-button {
-      background: linear-gradient(to right, #ef4444, #b91c1c);
-      color: white;
-      border: none;
-      border-radius: 0.5rem;
-      padding: 0.5rem;
-      font-size: 0.75rem;
-      font-weight: 500;
-      transition: all 0.2s ease;
-    }
-
-    .review-card .delete-button:hover {
-      background: linear-gradient(to right, #b91c1c, #991b1b);
-      transform: scale(1.03);
-      box-shadow: 0 3px 8px rgba(239, 68, 68, 0.3);
-    }
-
-    .review-form {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-
-    .review-form input[type="text"],
-    .review-form textarea {
-      background: #1f2937;
-      border: 2px solid transparent;
-      border-radius: 0.5rem;
-      padding: 0.75rem;
-      color: white;
-      font-size: 1rem;
-      transition: all 0.2s ease;
-    }
-
-    body.light-theme .review-form input[type="text"],
-    body.light-theme .review-form textarea {
-      background: #e5e7eb;
-      color: #1f2937;
-    }
-
-    .review-form input[type="text"]:focus,
-    .review-form textarea:focus {
-      border-color: #60a5fa;
-      box-shadow: 0 0 8px rgba(96, 165, 250, 0.4);
-      background: #111827;
-    }
-
-    body.light-theme .review-form input[type="text"]:focus,
-    body.light-theme .review-form textarea:focus {
-      background: #ffffff;
-    }
-
-    .review-form textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    .review-stats {
-      background: linear-gradient(145deg, #1f2937, #111827);
-      border-radius: 1rem;
-      padding: 0.75rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-      font-size: 0.9rem;
-    }
-
-    body.light-theme .review-stats {
-      background: linear-gradient(145deg, #ffffff, #e5e7eb);
-    }
-
     @media (max-width: 640px) {
       .p-6 { padding: 0.5rem; }
       .text-xl { font-size: 1rem; }
@@ -462,22 +343,13 @@
       #cart > div > div > button { padding: 0.25rem; font-size: 0.7rem; }
       #scrollTop { bottom: 0.5rem; right: 0.5rem; width: 2rem; height: 2rem; font-size: 1rem; }
       button.bg-white { padding: 0.5rem 1rem; min-width: 100px; }
-      input[type="text"], input[type="password"] { padding: 0.5rem; font-size: 0.9rem; }
+      input[type="text"] { padding: 0.5rem; font-size: 0.9rem; }
       .flex { flex-direction: column; }
       .justify-between { justify-content: center; }
       .mb-6 { margin-bottom: 0.5rem; }
       .mt-8 { margin-top: 0.5rem; }
       #items > div > div { flex-direction: column; align-items: center; text-align: center; }
       #cart > div > div { align-items: center; }
-      .review-card { padding: 0.5rem; }
-      .review-card .review-header .review-author { font-size: 0.8rem; }
-      .review-card .review-header .review-date { font-size: 0.65rem; }
-      .review-card .review-text { font-size: 0.75rem; }
-      .review-card .delete-button { padding: 0.25rem; font-size: 0.65rem; }
-      .review-form input[type="text"],
-      .review-form textarea { padding: 0.5rem; font-size: 0.9rem; }
-      .review-form textarea { min-height: 80px; }
-      .review-stats { padding: 0.5rem; font-size: 0.8rem; }
     }
 
     @media (max-width: 320px) {
@@ -485,7 +357,6 @@
       .text-3xl { font-size: 1.5rem; }
       .item { margin-bottom: 0.5rem; }
       #cart > div > div > span { font-size: 0.75rem; }
-      .review-card { margin-bottom: 0.5rem; }
     }
   </style>
 </head>
@@ -499,13 +370,6 @@
     </h1>
     <p class="text-red-400 text-center mb-3">Проверьте ник, ошибки на вас!</p>
     <input type="text" id="robloxName" placeholder="Roblox ник" class="w-full p-3 rounded-md mb-3 text-white focus:outline-none">
-    <div class="flex items-center mb-3">
-      <input type="checkbox" id="isModerator" class="mr-2">
-      <label for="isModerator" class="text-gray-300 text-sm">Я модератор</label>
-    </div>
-    <div id="moderatorPassword" class="hidden mb-3">
-      <input type="password" id="modPassword" placeholder="Пароль модератора" class="w-full p-3 rounded-md text-white focus:outline-none">
-    </div>
     <div class="flex items-center mb-3">
       <input type="checkbox" id="agreement" class="mr-2">
       <label for="agreement" class="text-gray-300 text-sm">Согласен с условиями</label>
@@ -526,7 +390,7 @@
           <button class="category-button active" data-category="all" onclick="filterCategory('all')">Все</button>
           <button class="category-button" data-category="classes" onclick="filterCategory('classes')">Классы</button>
           <button class="category-button" data-category="trains" onclick="filterCategory('trains')">Поезда</button>
-          <button class="category-button" data-category="reviews" onclick="filterCategory('reviews')">Отзывы</button>
+          <button class="category-button" data-category="history" onclick="filterCategory('history')">История</button>
           <button class="category-button" onclick="sortItems('asc')">Цена ↑</button>
           <button class="category-button" onclick="sortItems('desc')">Цена ↓</button>
         </div>
@@ -677,18 +541,9 @@
         </div>
       </div>
 
-      <div id="reviews" class="hidden">
-        <h2 class="text-2xl font-bold text-white text-center mb-4">Отзывы</h2>
-        <div class="review-stats">
-          <p>Всего отзывов: <span id="review-count">0</span></p>
-          <p>Средняя длина отзыва: <span id="review-avg-length">0</span> символов</p>
-        </div>
-        <div class="space-y-2" id="reviews-list"></div>
-        <div class="review-form" id="review-form" style="display: none;">
-          <input type="text" id="review-author" placeholder="Ваше имя" class="w-full">
-          <textarea id="review-text" placeholder="Ваш отзыв" class="w-full"></textarea>
-          <button onclick="submitReview()" class="bg-white text-white px-3 py-1 rounded-md transition-colors">Отправить</button>
-        </div>
+      <div id="history" class="hidden">
+        <h2 class="text-2xl font-bold text-white text-center mb-4">История покупок</h2>
+        <div id="history-list" class="space-y-2"></div>
       </div>
 
       <div class="mt-4">
@@ -739,11 +594,9 @@
   </button>
 
   <script>
-    let username = "";
-    let isModerator = false;
+    let username = localStorage.getItem("username") || "";
     let cart = [];
-    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
-    const MODERATOR_PASSWORD = "admin123"; // Пароль для модераторов (можно изменить)
+    let purchaseHistory = JSON.parse(localStorage.getItem("purchaseHistory")) || [];
 
     document.addEventListener("DOMContentLoaded", () => {
       const savedCart = localStorage.getItem("cart");
@@ -757,33 +610,20 @@
         document.body.classList.add("light-theme");
       }
 
-      loadReviews();
-      updateReviewStats();
       document.querySelectorAll('.item').forEach((el, i) => {
         el.style.animationDelay = `${i * 0.05}s`;
       });
 
-      // Показать/скрыть поле пароля модератора
-      document.getElementById("isModerator").addEventListener("change", function() {
-        document.getElementById("moderatorPassword").classList.toggle("hidden", !this.checked);
-        updateEnterButtonState();
+      // Проверяем, есть ли сохранённый ник
+      if (username) {
+        document.getElementById("login").classList.add("hidden");
+        document.getElementById("shop").classList.remove("hidden");
+      }
+
+      document.getElementById("agreement").addEventListener("change", function() {
+        document.getElementById("enterButton").disabled = !this.checked;
       });
-
-      // Обновление состояния кнопки "Войти"
-      document.getElementById("agreement").addEventListener("change", updateEnterButtonState);
-      document.getElementById("robloxName").addEventListener("input", updateEnterButtonState);
-      document.getElementById("modPassword").addEventListener("input", updateEnterButtonState);
     });
-
-    function updateEnterButtonState() {
-      const agreementChecked = document.getElementById("agreement").checked;
-      const robloxName = document.getElementById("robloxName").value.trim();
-      const isModeratorChecked = document.getElementById("isModerator").checked;
-      const modPassword = document.getElementById("modPassword").value.trim();
-
-      const isValid = agreementChecked && robloxName !== "" && (!isModeratorChecked || (isModeratorChecked && modPassword !== ""));
-      document.getElementById("enterButton").disabled = !isValid;
-    }
 
     function toggleTheme() {
       document.body.classList.toggle("light-theme");
@@ -802,30 +642,14 @@
 
     function enterStore() {
       const input = document.getElementById("robloxName").value.trim();
-      const isModeratorChecked = document.getElementById("isModerator").checked;
-      const modPassword = document.getElementById("modPassword").value.trim();
-
       if (input === "") {
         alert("Введите ник!");
         return;
       }
-
-      if (isModeratorChecked) {
-        if (modPassword !== MODERATOR_PASSWORD) {
-          alert("Неверный пароль модератора!");
-          return;
-        }
-        isModerator = true;
-      } else {
-        isModerator = false;
-      }
-
       username = input;
+      localStorage.setItem("username", username); // Сохраняем ник
       document.getElementById("login").classList.add("hidden");
       document.getElementById("shop").classList.remove("hidden");
-      document.getElementById("review-form").style.display = "flex";
-      loadReviews();
-      updateReviewStats();
       document.querySelectorAll('.item').forEach((el, i) => {
         el.style.animationDelay = `${i * 0.05}s`;
       });
@@ -835,13 +659,10 @@
       document.getElementById("shop").classList.add("hidden");
       document.getElementById("login").classList.remove("hidden");
       document.getElementById("robloxName").value = "";
-      document.getElementById("isModerator").checked = false;
-      document.getElementById("modPassword").value = "";
-      document.getElementById("moderatorPassword").classList.add("hidden");
       document.getElementById("agreement").checked = false;
       document.getElementById("enterButton").disabled = true;
       username = "";
-      isModerator = false;
+      localStorage.removeItem("username"); // Удаляем ник
       cart = [];
       localStorage.removeItem("cart");
       updateCart();
@@ -921,6 +742,13 @@
     function buyAll() {
       if (!username || cart.length === 0) return;
       const purchaseDetails = cart.map(cartItem => `Товар: ${cartItem.item}, Цена: ${cartItem.price} тг`).join("\n");
+      const purchase = {
+        date: new Date().toLocaleString(),
+        items: [...cart], // Копируем корзину
+        total: cart.reduce((sum, item) => sum + item.price, 0)
+      };
+      purchaseHistory.push(purchase);
+      localStorage.setItem("purchaseHistory", JSON.stringify(purchaseHistory));
       fetch("https://discord.com/api/webhooks/1370484054008266863/C3LVADVDozvUsnHF39Id3b6vsyTuZIzE9Cn0Up86f20V5vwsxr6RLvN4wVXQ-0Tuc7U2", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -931,6 +759,23 @@
       showNotification();
       cart = [];
       updateCart();
+    }
+
+    function loadHistory() {
+      const historyList = document.getElementById("history-list");
+      historyList.innerHTML = "";
+      purchaseHistory.forEach((purchase, index) => {
+        const purchaseDiv = document.createElement("div");
+        purchaseDiv.className = "bg-gray-800 p-3 rounded-md";
+        purchaseDiv.innerHTML = `
+          <p class="text-white font-bold">Покупка #${index + 1} (${purchase.date})</p>
+          <ul class="list-disc pl-5 text-gray-300">
+            ${purchase.items.map(item => `<li>${item.icon} ${item.item} — ${item.price} тг</li>`).join("")}
+          </ul>
+          <p class="text-gray-300 mt-1">Итого: ${purchase.total} тг</p>
+        `;
+        historyList.appendChild(purchaseDiv);
+      });
     }
 
     function filterCategory(category) {
@@ -950,7 +795,8 @@
 
       document.getElementById("classes").style.display = (category === "all" || category === "classes") ? "block" : "none";
       document.getElementById("trains").style.display = (category === "all" || category === "trains") ? "block" : "none";
-      document.getElementById("reviews").style.display = (category === "all" || category === "reviews") ? "block" : "none";
+      document.getElementById("history").style.display = (category === "history") ? "block" : "none";
+      if (category === "history") loadHistory();
     }
 
     function sortItems(order) {
@@ -970,70 +816,12 @@
         const category = item.getAttribute("data-category");
         if (category === "classes") {
           classesContainer.appendChild(item);
-        } else {
+        } else if (category === "trains") {
           trainsContainer.appendChild(item);
         }
       });
 
       filterCategory(document.querySelector(".category-button.active").getAttribute("data-category"));
-    }
-
-    document.getElementById("search").addEventListener("input", function() {
-      const activeCategory = document.querySelector(".category-button.active").getAttribute("data-category");
-      filterCategory(activeCategory);
-    });
-
-    function updateReviewStats() {
-      const reviewCount = reviews.length;
-      const totalLength = reviews.reduce((sum, review) => sum + review.text.length, 0);
-      const avgLength = reviewCount > 0 ? Math.round(totalLength / reviewCount) : 0;
-
-      document.getElementById("review-count").textContent = reviewCount;
-      document.getElementById("review-avg-length").textContent = avgLength;
-    }
-
-    function loadReviews() {
-      const reviewsList = document.getElementById("reviews-list");
-      reviewsList.innerHTML = "";
-      reviews.forEach((review, index) => {
-        const reviewCard = document.createElement("div");
-        reviewCard.className = "review-card";
-        const canDelete = isModerator || review.username === username;
-        reviewCard.innerHTML = `
-          <div class="review-header">
-            <span class="review-author">${review.author}</span>
-            <span class="review-date">${review.date}</span>
-          </div>
-          <p class="review-text">${review.text}</p>
-          ${canDelete ? `<button class="delete-button" onclick="deleteReview(${index})">Удалить</button>` : ""}
-        `;
-        reviewsList.appendChild(reviewCard);
-        reviewCard.style.animationDelay = `${index * 0.2}s`;
-      });
-    }
-
-    function submitReview() {
-      const author = document.getElementById("review-author").value.trim();
-      const text = document.getElementById("review-text").value.trim();
-      const date = new Date().toLocaleDateString();
-
-      if (author && text && username) {
-        reviews.push({ author, text, date, username });
-        localStorage.setItem("reviews", JSON.stringify(reviews));
-        document.getElementById("review-author").value = "";
-        document.getElementById("review-text").value = "";
-        loadReviews();
-        updateReviewStats();
-      } else {
-        alert("Введите имя и отзыв, а также войдите в магазин!");
-      }
-    }
-
-    function deleteReview(index) {
-      reviews.splice(index, 1);
-      localStorage.setItem("reviews", JSON.stringify(reviews));
-      loadReviews();
-      updateReviewStats();
     }
 
     document.getElementById("search").addEventListener("input", function() {
